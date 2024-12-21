@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MoviesApp</string>
+    <string name="no_movies_has_been_found">No movies has been found</string>
 </resources>
