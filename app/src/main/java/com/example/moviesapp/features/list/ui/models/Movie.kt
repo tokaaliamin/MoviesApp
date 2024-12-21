@@ -1,6 +1,6 @@
-package com.example.moviesapp.ui.screens.list.models
+package com.example.moviesapp.features.list.ui.models
 
-data class Movie(val id: Int, val title: String, val posterUrl: String, val releaseDate: String)
+data class Movie(val id: Int?, val title: String?, val posterUrl: String?, val releaseDate: String?)
 
 fun getMovieTemp(): Movie {
     return Movie(
