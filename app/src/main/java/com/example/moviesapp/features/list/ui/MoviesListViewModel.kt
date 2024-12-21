@@ -1,6 +1,5 @@
 package com.example.moviesapp.features.list.ui
 
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviesapp.features.common.domain.PostersUseCase
@@ -9,7 +8,6 @@ import com.example.moviesapp.features.list.domain.MovieListUseCase
 import com.example.moviesapp.features.list.ui.actions.MoviesListUiActions
 import com.example.moviesapp.features.list.ui.models.Movie
 import com.example.moviesapp.features.list.ui.states.MoviesListUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -21,21 +19,12 @@ class MoviesListViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(MoviesListUiState())
     val uiState: StateFlow<MoviesListUiState> = _uiState
 
-    /*   private val _movies = mutableStateListOf<Movie>().apply {
-           addAll(
-               listOf(
-                   getMovieTemp(), getMovieTemp()
-               )
-           )
-       }
-   */
-
     init {
         discoverMovies(1)
     }
 
-    fun onAction(action:MoviesListUiActions){
-        when(action){
+    fun onAction(action: MoviesListUiActions) {
+        when (action) {
             MoviesListUiActions.OpenMovieDetails -> TODO()
             MoviesListUiActions.RefreshMoviesList -> {
                 _uiState.update { it.copy(isRefreshing = true) }
@@ -44,7 +33,7 @@ class MoviesListViewModel : ViewModel() {
         }
     }
 
-    public fun discoverMovies(pageNumber: Int) {
+    fun discoverMovies(pageNumber: Int) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             val result = MovieListUseCase().invoke(pageNumber)
