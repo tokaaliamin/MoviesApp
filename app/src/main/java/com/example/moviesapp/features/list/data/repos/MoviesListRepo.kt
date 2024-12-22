@@ -18,6 +18,16 @@ class MoviesListRepo() {
             }
         }
     }
+    suspend fun searchMovies(keyword:String,pageNumber: Int): Result<MoviesListResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val result = moviesListRemoteDataSource.searchMovies(keyword,pageNumber)
+                Result.success(result)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
 
 
 }

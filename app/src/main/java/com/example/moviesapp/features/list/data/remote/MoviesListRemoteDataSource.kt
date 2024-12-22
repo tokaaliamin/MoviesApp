@@ -14,5 +14,11 @@ class MoviesListRemoteDataSource() {
     ): MoviesListResponse {
         return moviesListService.discoverMovies(pageNumber)
     }
+    suspend fun searchMovies(
+        keyword:String,
+        pageNumber: Int
+    ): MoviesListResponse {
+        return moviesListService.searchMovies(keyword,pageNumber)
+    }
 
 }
