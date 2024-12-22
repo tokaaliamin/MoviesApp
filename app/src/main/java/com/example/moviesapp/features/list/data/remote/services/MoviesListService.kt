@@ -12,4 +12,11 @@ interface MoviesListService {
         @Query("language") language: String = "en-US"
     ): MoviesListResponse
 
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query("query") keyword: String,
+        @Query("page") pageNumber: Int,
+        @Query("language") language: String = "en-US"
+    ): MoviesListResponse
+
 }

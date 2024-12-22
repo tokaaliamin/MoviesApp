@@ -8,5 +8,6 @@ data class MoviesListUiState(
     var movies: List<Movie>? = null,
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
-    val errorMessageWrapper: StringWrapper? = null
+    val errorMessageWrapper: StringWrapper? = null,
+    val keyword: String? = null
 )
