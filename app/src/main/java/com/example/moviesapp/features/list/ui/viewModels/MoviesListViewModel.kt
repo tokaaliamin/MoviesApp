@@ -1,4 +1,4 @@
-package com.example.moviesapp.features.list.ui
+package com.example.moviesapp.features.list.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
