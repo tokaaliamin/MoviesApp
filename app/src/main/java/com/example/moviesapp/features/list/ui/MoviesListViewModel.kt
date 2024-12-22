@@ -2,7 +2,9 @@ package com.example.moviesapp.features.list.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moviesapp.R
 import com.example.moviesapp.features.common.domain.PostersUseCase
+import com.example.moviesapp.features.common.ui.models.StringWrapper
 import com.example.moviesapp.features.list.data.remote.models.ErrorResponse
 import com.example.moviesapp.features.list.domain.MovieListUseCase
 import com.example.moviesapp.features.list.ui.actions.MoviesListUiActions
@@ -56,7 +58,7 @@ class MoviesListViewModel : ViewModel() {
                 }
 
                 result.isFailure -> {
-                    val errorMessage = when (val throwable = result.exceptionOrNull()) {
+                    val errorMessageWrapper = when (val throwable = result.exceptionOrNull()) {
                         is HttpException -> {
                             // Get error body as a string
                             val errorBody = throwable.response()?.errorBody()?.string()
@@ -64,21 +66,20 @@ class MoviesListViewModel : ViewModel() {
                                 try {
                                     val errorResponse =
                                         Json.decodeFromString<ErrorResponse>(errorBody)
-                                    errorResponse.statusMessage
-
+                                    StringWrapper(message = errorResponse.statusMessage)
                                 } catch (e: Exception) {
-                                    "Failed to parse error response"
+                                    StringWrapper(stringInt = R.string.failed_to_parse_error_response)
                                 }
                             } else {
-                                "Failed to parse error response"
+                                StringWrapper(stringInt = R.string.failed_to_parse_error_response)
                             }
                         }
 
                         else ->
-                            "Failed to parse error response"
+                            StringWrapper(stringInt = R.string.failed_to_parse_error_response)
                     }
                     _uiState.update {
-                        it.copy(errorMessage = errorMessage)
+                        it.copy(errorMessageWrapper = errorMessageWrapper)
                     }
                 }
             }
