@@ -6,15 +6,19 @@ import com.example.moviesapp.R
 import com.example.moviesapp.features.common.domain.PostersUseCase
 import com.example.moviesapp.features.common.ui.models.StringWrapper
 import com.example.moviesapp.features.list.data.remote.models.ErrorResponse
-import com.example.moviesapp.features.list.data.remote.models.MoviesListResponse
 import com.example.moviesapp.features.list.domain.MovieListUseCase
 import com.example.moviesapp.features.list.domain.SearchMoviesUseCase
 import com.example.moviesapp.features.list.ui.actions.MoviesListUiActions
 import com.example.moviesapp.features.list.ui.models.Movie
 import com.example.moviesapp.features.list.ui.states.MoviesListUiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -23,7 +27,7 @@ import retrofit2.HttpException
 class MoviesListViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(MoviesListUiState())
     val uiState: StateFlow<MoviesListUiState> = _uiState
-    private var runningJob:Job?=null
+    private var runningJob: Job? = null
 
     init {
         discoverMovies(1)
@@ -61,16 +65,20 @@ class MoviesListViewModel : ViewModel() {
     private fun discoverMovies(pageNumber: Int) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val result = MovieListUseCase().invoke(pageNumber)
-            _uiState.update { it.copy(isLoading = false, isRefreshing = false) }
-            handleMoviesListResult(result)
-
+            MovieListUseCase().invoke(pageNumber)
+                .flowOn(Dispatchers.IO)
+                .onCompletion {
+                    _uiState.update { it.copy(isLoading = false, isRefreshing = false) }
+                }
+                .collectLatest { result ->
+                    handleMoviesListResult(result)
+                }
         }
     }
 
     private fun searchMovies(keyword: String, pageNumber: Int) {
         runningJob?.cancel()
-        runningJob=viewModelScope.launch {
+        runningJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, keyword = keyword) }
             val result = SearchMoviesUseCase().invoke(keyword, pageNumber)
             _uiState.update { it.copy(isLoading = false, isRefreshing = false) }
@@ -78,13 +86,13 @@ class MoviesListViewModel : ViewModel() {
         }
     }
 
-    private fun handleMoviesListResult(result: Result<MoviesListResponse>) {
+    private fun handleMoviesListResult(result: Result<List<com.example.moviesapp.features.list.domain.movies.Movie>>) {
         when {
             result.isSuccess -> {
-                result.getOrNull()?.movies?.map { movie ->
+                result.getOrNull()?.map { movie ->
                     Movie(
                         movie.id,
-                        movie.originalTitle,
+                        movie.title,
                         PostersUseCase().invoke(movie.posterPath),
                         movie.releaseDate
                     )

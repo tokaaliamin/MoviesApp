@@ -1,5 +1,7 @@
 package com.example.moviesapp.features.list.ui.components
 
+import android.widget.ProgressBar
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -53,27 +56,34 @@ public fun MoviesListScreen(
                 }, onClear = { moviesListViewModel.onAction(MoviesListUiActions.ClearSearch) })
             }
         ) { innerPadding ->
-            PullToRefreshBox(
-                isRefreshing = uiState.isRefreshing,
-                onRefresh = {
-                    moviesListViewModel.onAction(MoviesListUiActions.RefreshMoviesList)
-                },
-                modifier = modifier.fillMaxSize()
-            ) {
-                when {
-                    uiState.movies != null && uiState.movies!!.isEmpty() ->
-                        NoDataPlaceholder()
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(innerPadding)) {
+                if (uiState.isLoading)
+                    ProgressBar()
+                PullToRefreshBox(
+                    isRefreshing = uiState.isRefreshing,
+                    onRefresh = {
+                        moviesListViewModel.onAction(MoviesListUiActions.RefreshMoviesList)
+                    },
+                    modifier = modifier.fillMaxSize()
+                ) {
+                    when {
+                        uiState.movies != null && uiState.movies!!.isEmpty() ->
+                            NoDataPlaceholder()
 
-                    uiState.movies != null ->
-                        MoviesList(
-                            uiState.movies!!, Modifier.padding(innerPadding)
-                        )
+                        uiState.movies != null ->
+                            MoviesList(
+                                uiState.movies!!, Modifier.padding(innerPadding)
+                            )
 
-                    uiState.errorMessageWrapper != null ->
-                        ErrorPlaceholder(
-                            uiState.errorMessageWrapper!!,
-                            { moviesListViewModel.onAction(MoviesListUiActions.RefreshMoviesList) }
-                        )
+                        uiState.errorMessageWrapper != null ->
+                            ErrorPlaceholder(
+                                uiState.errorMessageWrapper!!,
+                                { moviesListViewModel.onAction(MoviesListUiActions.RefreshMoviesList) }
+                            )
+                    }
                 }
             }
         }
@@ -110,6 +120,11 @@ fun SearchBar(
             unfocusedContainerColor = MaterialTheme.colorScheme.surface
         )
     )
+}
+
+@Composable
+fun ProgressBar(modifier: Modifier = Modifier) {
+    LinearProgressIndicator(modifier = modifier.fillMaxWidth())
 }
 
 @Preview(showBackground = true)
