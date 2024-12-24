@@ -1,6 +1,5 @@
 package com.example.moviesapp.features.list.ui.components
 
-import android.widget.ProgressBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -75,7 +74,7 @@ public fun MoviesListScreen(
 
                         uiState.movies != null ->
                             MoviesList(
-                                uiState.movies!!, Modifier.padding(innerPadding)
+                                uiState.movies!!
                             )
 
                         uiState.errorMessageWrapper != null ->
