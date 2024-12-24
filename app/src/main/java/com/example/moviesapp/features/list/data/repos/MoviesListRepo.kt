@@ -28,6 +28,7 @@ class MoviesListRepo() {
                     localMovie.toDomainMovie()
                 }
                 localResult?.let { result -> emit(Result.success(result)) }
+                //TODO remove the delay
                 delay(3000)
 
                 //check there is internet

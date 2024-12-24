@@ -12,10 +12,12 @@ import com.example.moviesapp.features.list.ui.actions.MoviesListUiActions
 import com.example.moviesapp.features.list.ui.models.Movie
 import com.example.moviesapp.features.list.ui.states.MoviesListUiState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
+import kotlin.time.Duration.Companion.milliseconds
 
 class MoviesListViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(MoviesListUiState())
@@ -62,11 +65,13 @@ class MoviesListViewModel : ViewModel() {
         onAction(MoviesListUiActions.RefreshMoviesList)
     }
 
+    @OptIn(FlowPreview::class)
     private fun discoverMovies(pageNumber: Int) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             MovieListUseCase().invoke(pageNumber)
                 .flowOn(Dispatchers.IO)
+                .debounce(2000.milliseconds)
                 .onCompletion {
                     _uiState.update { it.copy(isLoading = false, isRefreshing = false) }
                 }
