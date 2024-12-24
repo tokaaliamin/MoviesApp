@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Result(
+data class Movie(
     @SerialName("adult")
     val adult: Boolean? = null,
     @SerialName("backdrop_path")
@@ -34,4 +34,19 @@ data class Result(
     val voteAverage: Double? = null,
     @SerialName("vote_count")
     val voteCount: Int? = null
+)
+
+fun Movie.toLocalMovie() = com.example.moviesapp.features.list.data.local.models.Movie(
+    id ?: 0,
+    posterPath,
+    releaseDate,
+    title,
+    popularity ?: 0.0
+)
+
+fun Movie.toDomainMovie() = com.example.moviesapp.features.list.domain.movies.Movie(
+    id ?: 0,
+    posterPath,
+    releaseDate,
+    title
 )
