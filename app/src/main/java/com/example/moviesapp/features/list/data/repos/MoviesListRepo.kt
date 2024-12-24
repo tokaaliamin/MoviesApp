@@ -5,7 +5,6 @@ import com.example.moviesapp.features.common.utils.NetworkConnectivityManager
 import com.example.moviesapp.features.list.data.local.MoviesListLocalDataSource
 import com.example.moviesapp.features.list.data.local.models.toDomainMovie
 import com.example.moviesapp.features.list.data.remote.MoviesListRemoteDataSource
-import com.example.moviesapp.features.list.data.remote.models.MoviesListResponse
 import com.example.moviesapp.features.list.data.remote.models.toDomainMovie
 import com.example.moviesapp.features.list.data.remote.models.toLocalMovie
 import com.example.moviesapp.features.list.domain.movies.Movie
@@ -36,8 +35,7 @@ class MoviesListRepo() {
                     //fetch latest remote data
                     val result = moviesListRemoteDataSource.discoverMovies(pageNumber)
                     if (result.movies.isEmpty().not()) {
-                        //clear then update database with the new remote data
-                        moviesListLocalDataSource.clearMovies()
+                        //update database with the new remote data
                         moviesListLocalDataSource.cacheMovies(result.movies.map { it.toLocalMovie() })
                     }
                     emit(Result.success(result.movies.map { remoteMovie ->

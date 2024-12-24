@@ -40,7 +40,8 @@ fun Movie.toLocalMovie() = com.example.moviesapp.features.list.data.local.models
     id ?: 0,
     posterPath,
     releaseDate,
-    title
+    title,
+    popularity ?: 0.0
 )
 
 fun Movie.toDomainMovie() = com.example.moviesapp.features.list.domain.movies.Movie(

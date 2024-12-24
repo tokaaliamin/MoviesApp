@@ -8,10 +8,10 @@ import com.example.moviesapp.features.list.data.local.models.Movie
 
 @Dao
 interface MovieDao {
-    @Query("SELECT * FROM movie")
+    @Query("SELECT * FROM movie ORDER BY popularity DESC")
     fun getAll():List<Movie>
 
-    @Query("SELECT * FROM movie WHERE title LIKE :keyword")
+    @Query("SELECT * FROM movie WHERE title LIKE :keyword ORDER BY popularity DESC")
     fun findByTitle(keyword:String):List<Movie>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
