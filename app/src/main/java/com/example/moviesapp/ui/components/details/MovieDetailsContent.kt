@@ -40,8 +40,10 @@ import com.example.moviesapp.ui.models.getMovieDetailsTemp
 import com.example.moviesapp.ui.theme.Yellow
 
 @Composable
-fun MovieDetailsContent(movie: MovieDetails?) {
-    Box {
+fun MovieDetailsContent(movie: MovieDetails?, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.verticalScroll(rememberScrollState())
+    ) {
         val backdropHeight = 200.dp
         val imagesOverlay = 50.dp
         AsyncImage(
@@ -68,7 +70,6 @@ fun MovieDetailsInfo(movie: MovieDetails?, imagesOverlay: Dp, modifier: Modifier
     Column(
         modifier = modifier
             .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
     ) {
         Row {
             AsyncImage(
