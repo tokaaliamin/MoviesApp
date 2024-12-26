@@ -4,7 +4,6 @@ data class MovieDetails(
     val id: Int?,
     val title: String?,
     val posterUrl: String?,
-    val releaseDate: String?,
     val backdropPath: String?,
     val rating: Double?,
     val genres: List<Genre>?,
@@ -16,7 +15,6 @@ fun getMovieDetailsTemp(): MovieDetails {
         0,
         "Elemental",
         "https://image.tmdb.org/t/p/w200/4Y1WNkd88JXmGfhtWR7dmDAo1T2.jpg",
-        "06/16/2023",
         "https://image.tmdb.org/t/p/w500/cjEcqdRdPQJhYre3HUAc5538Gk8.jpg",
         4.5,
         listOf(

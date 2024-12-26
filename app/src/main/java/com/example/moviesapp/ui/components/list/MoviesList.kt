@@ -1,5 +1,6 @@
 package com.example.moviesapp.ui.components.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,7 +25,11 @@ import com.example.moviesapp.ui.models.Movie
 import com.example.moviesapp.ui.models.getMovieTemp
 
 @Composable
-fun MoviesList(movies: List<Movie>, modifier: Modifier = Modifier) {
+fun MoviesList(
+    movies: List<Movie>,
+    onMovieClicked: (Int?) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(2),
@@ -34,15 +39,15 @@ fun MoviesList(movies: List<Movie>, modifier: Modifier = Modifier) {
         state = rememberLazyGridState()
     ) {
         items(movies) { movie ->
-            MovieItem(movie)
+            MovieItem(movie, onMovieClicked)
         }
 
     }
 }
 
 @Composable
-fun MovieItem(movie: Movie, modifier: Modifier = Modifier) {
-    Card(modifier = modifier) {
+fun MovieItem(movie: Movie, onMovieClicked: (Int?) -> Unit = {}, modifier: Modifier = Modifier) {
+    Card(modifier = modifier.clickable { onMovieClicked.invoke(movie.id) }) {
         Column {
             AsyncImage(
                 model = movie.posterUrl,

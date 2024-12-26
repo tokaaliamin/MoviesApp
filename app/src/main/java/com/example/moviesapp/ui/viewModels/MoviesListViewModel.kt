@@ -37,7 +37,6 @@ class MoviesListViewModel : ViewModel() {
 
     fun onAction(action: MoviesListUiActions) {
         when (action) {
-            MoviesListUiActions.OpenMovieDetails -> TODO()
             MoviesListUiActions.RefreshMoviesList -> {
                 _uiState.update { it.copy(isRefreshing = true) }
                 discoverMovies(1)

@@ -29,3 +29,13 @@ data class MovieDetails(
     @SerialName("vote_count")
     val voteCount: Int? = null
 )
+
+fun MovieDetails.toDomainMovieDetails() = com.example.moviesapp.domain.models.MovieDetails(
+    backdropPath,
+    genres?.map { it.toDomainGenre() },
+    id ?: 0,
+    title,
+    overview,
+    posterPath,
+    voteAverage
+)

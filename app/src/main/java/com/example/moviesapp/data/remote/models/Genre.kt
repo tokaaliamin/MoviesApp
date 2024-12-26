@@ -11,3 +11,8 @@ data class Genre(
     @SerialName("name")
     val name: String? = null
 )
+
+fun Genre.toDomainGenre() = com.example.moviesapp.domain.models.Genre(
+    id,
+    name
+)

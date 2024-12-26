@@ -38,6 +38,7 @@ import com.example.moviesapp.ui.viewModels.MoviesListViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 public fun MoviesListScreen(
+    onMovieClicked: (Int?) -> Unit = {},
     modifier: Modifier = Modifier,
     moviesListViewModel: MoviesListViewModel = viewModel()
 ) {
@@ -75,7 +76,8 @@ public fun MoviesListScreen(
 
                         uiState.movies != null ->
                             MoviesList(
-                                uiState.movies!!
+                                uiState.movies!!,
+                                onMovieClicked
                             )
 
                         uiState.errorMessageWrapper != null ->
