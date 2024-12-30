@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -20,13 +19,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.example.moviesapp.ui.models.Movie
 import com.example.moviesapp.ui.models.getMovieTemp
 
 @Composable
 fun MoviesList(
-    movies: List<Movie>,
+    movies: LazyPagingItems<Movie>,
     onMovieClicked: (Int?) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -38,8 +39,9 @@ fun MoviesList(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         state = rememberLazyGridState()
     ) {
-        items(movies) { movie ->
-            MovieItem(movie, onMovieClicked)
+        items(movies.itemCount,
+            key = movies.itemKey { it.id!! }) { index ->
+            movies[index]?.let { MovieItem(it, onMovieClicked) }
         }
 
     }
@@ -78,13 +80,13 @@ fun MovieItem(movie: Movie, onMovieClicked: (Int?) -> Unit = {}, modifier: Modif
 @Preview(showBackground = true)
 @Composable
 fun MoviesListPreview() {
-    MoviesList(
-        listOf(
-            getMovieTemp(),
-            getMovieTemp(),
-            getMovieTemp()
-        )
-    )
+    /* MoviesList(
+         listOf(
+             getMovieTemp(),
+             getMovieTemp(),
+             getMovieTemp()
+         )
+     )*/
 }
 
 @Preview(showBackground = true)

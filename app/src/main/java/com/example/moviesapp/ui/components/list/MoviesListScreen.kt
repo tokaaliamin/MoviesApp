@@ -26,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.actions.MoviesListUiActions
 import com.example.moviesapp.ui.components.ErrorPlaceholder
@@ -33,6 +35,8 @@ import com.example.moviesapp.ui.components.NoDataPlaceholder
 import com.example.moviesapp.ui.components.list.MoviesList
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.example.moviesapp.ui.viewModels.MoviesListViewModel
+import com.example.moviesapp.utils.ErrorParser.getLoadStateError
+import com.example.moviesapp.utils.ErrorParser.isLoadStateError
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,6 +48,7 @@ public fun MoviesListScreen(
 ) {
     MoviesAppTheme {
         val uiState by moviesListViewModel.uiState.collectAsStateWithLifecycle()
+        val pagingItems = moviesListViewModel.moviesListFlow.collectAsLazyPagingItems()
 
         Scaffold(modifier = Modifier.fillMaxSize(),
             topBar = {
@@ -54,36 +59,48 @@ public fun MoviesListScreen(
                         else
                             MoviesListUiActions.Search(keyword)
                     )
+
                 }, onClear = { moviesListViewModel.onAction(MoviesListUiActions.ClearSearch) })
             }
         ) { innerPadding ->
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxSize()
-                .padding(innerPadding)) {
-                if (uiState.isLoading)
+            val isLoading = pagingItems.loadState.mediator?.append is LoadState.Loading ||
+                    pagingItems.loadState.source.append is LoadState.Loading
+            val isError = isLoadStateError(pagingItems.loadState)
+            val isEmpty = pagingItems.itemCount == 0 && !isLoading && !isError
+            val isRefreshing = pagingItems.loadState.refresh is LoadState.Loading
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                if (isLoading)
                     ProgressBar()
                 PullToRefreshBox(
-                    isRefreshing = uiState.isRefreshing,
+                    isRefreshing = isRefreshing,
                     onRefresh = {
-                        moviesListViewModel.onAction(MoviesListUiActions.RefreshMoviesList)
+                        pagingItems.refresh()
                     },
                     modifier = modifier.fillMaxSize()
                 ) {
                     when {
-                        uiState.movies != null && uiState.movies!!.isEmpty() ->
+                        isError && pagingItems.itemCount == 0 -> {
+                            getLoadStateError(pagingItems.loadState)?.let { error ->
+                                ErrorPlaceholder(
+                                    error,
+                                    { pagingItems.retry() }
+                                )
+                            }
+                        }
+
+                        isEmpty ->
                             NoDataPlaceholder()
 
-                        uiState.movies != null ->
+                        pagingItems.itemCount > 0 ->
                             MoviesList(
-                                uiState.movies!!,
+                                pagingItems,
                                 onMovieClicked
-                            )
-
-                        uiState.errorMessageWrapper != null ->
-                            ErrorPlaceholder(
-                                uiState.errorMessageWrapper!!,
-                                { moviesListViewModel.onAction(MoviesListUiActions.RefreshMoviesList) }
                             )
                     }
                 }

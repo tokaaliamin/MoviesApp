@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.models.StringWrapper
+import com.example.moviesapp.utils.ErrorParser
 
 
 @Composable
@@ -68,6 +69,15 @@ fun ErrorPlaceholder(
     }
 }
 
+@Composable
+fun ErrorPlaceholder(
+    throwable: Throwable,
+    onAction: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ErrorPlaceholder(ErrorParser.parseThrowable(throwable), onAction, modifier)
+}
+
 
 @Composable
 fun NoDataPlaceholder(modifier: Modifier = Modifier) {
@@ -88,7 +98,6 @@ fun NoDataPlaceholder(modifier: Modifier = Modifier) {
         )
     }
 }
-
 
 
 @Preview(showBackground = true)

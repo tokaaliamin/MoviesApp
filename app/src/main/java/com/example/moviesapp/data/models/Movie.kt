@@ -1,33 +1,30 @@
-package com.example.moviesapp.data.remote.models
+package com.example.moviesapp.data.models
 
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Entity
 @Serializable
 data class Movie(
-    @SerialName("backdrop_path")
-    val backdropPath: String? = null,
+    @PrimaryKey
     @SerialName("id")
     val id: Int? = null,
-    @SerialName("original_title")
-    val originalTitle: String? = null,
+    @ColumnInfo(name = "popularity")
     @SerialName("popularity")
     val popularity: Double? = null,
+    @ColumnInfo(name = "poster_path")
     @SerialName("poster_path")
     val posterPath: String? = null,
+    @ColumnInfo(name = "release_date")
     @SerialName("release_date")
     val releaseDate: String? = null,
+    @ColumnInfo(name = "title")
     @SerialName("title")
     val title: String? = null
-)
-
-fun Movie.toLocalMovie() = com.example.moviesapp.data.local.models.Movie(
-    id ?: 0,
-    posterPath,
-    releaseDate,
-    title,
-    popularity ?: 0.0
 )
 
 fun Movie.toDomainMovie() = com.example.moviesapp.domain.models.Movie(
