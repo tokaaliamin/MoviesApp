@@ -1,80 +1,65 @@
 package com.example.moviesapp.data.repos
 
-import com.example.moviesapp.data.local.dataSources.MoviesListLocalDataSource
-import com.example.moviesapp.data.local.models.toDomainMovie
-import com.example.moviesapp.data.remote.dataSources.MoviesListRemoteDataSource
-import com.example.moviesapp.data.remote.models.toDomainMovie
-import com.example.moviesapp.data.remote.models.toLocalMovie
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.example.moviesapp.data.MoviesListRemoteMediator
+import com.example.moviesapp.data.SearchRemotePagingSource
+import com.example.moviesapp.data.local.database.DatabaseManager
+import com.example.moviesapp.data.models.toDomainMovie
 import com.example.moviesapp.domain.models.Movie
-import com.example.moviesapp.utils.MyApplication
-import com.example.moviesapp.utils.NetworkConnectivityManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 
 class MoviesListRepo() {
-    private val moviesListRemoteDataSource by lazy { MoviesListRemoteDataSource() }
-    private val moviesListLocalDataSource by lazy { MoviesListLocalDataSource() }
-    private val networkConnectivityManager by lazy { NetworkConnectivityManager() }
+    private val database = DatabaseManager().getDatabase()
+    private val moviesDao = database?.movieDao()
 
-    suspend fun discoverMovies(pageNumber: Int): Flow<Result<List<Movie>>> {
-        return flow {
-            try {
-                //fetch local movies
-                val localResult = moviesListLocalDataSource.discoverMovies()?.map { localMovie ->
-                    localMovie.toDomainMovie()
-                }
-                localResult?.let { result -> emit(Result.success(result)) }
-                //TODO remove the delay
-                delay(3000)
+    private val _searchKeyword = MutableStateFlow("")
 
-                //check there is internet
-                if (networkConnectivityManager.isOnline(MyApplication.appContext)) {
-                    //fetch latest remote data
-                    val result = moviesListRemoteDataSource.discoverMovies(pageNumber)
-                    if (result.movies.isEmpty().not()) {
-                        //update database with the new remote data
-                        moviesListLocalDataSource.cacheMovies(result.movies.map { it.toLocalMovie() })
-                    }
-                    emit(Result.success(result.movies.map { remoteMovie ->
-                        remoteMovie.toDomainMovie()
-                    }))
-                }
-            } catch (e: Exception) {
-                emit(Result.failure(e))
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getMovies(): Flow<PagingData<Movie>> {
+        return _searchKeyword.flatMapLatest { keyword ->
+            println(keyword)
+            if (keyword.isBlank()) {
+                getDiscoverMoviesPager()
+            } else {
+                getSearchMoviesPager(keyword)
             }
         }
     }
 
-    suspend fun searchMovies(keyword: String, pageNumber: Int): Result<List<Movie>> {
-        return withContext(Dispatchers.IO) {
-            try {
-                //search in remote data
-                if (networkConnectivityManager.isOnline(MyApplication.appContext)) {
-                    val result = moviesListRemoteDataSource.searchMovies(keyword, pageNumber)
-
-                    Result.success(result.movies.map { remoteMovie ->
-                        remoteMovie.toDomainMovie()
-                    })
-                } else {
-                    //search in local DB
-                    val localResult = moviesListLocalDataSource.searchMovies(keyword, pageNumber)
-                        ?.map { localMovie ->
-                            localMovie.toDomainMovie()
-                        }
-                    if (localResult == null) {
-                        Result.success(emptyList())
-                    } else {
-                        Result.success(localResult)
-                    }
-                }
-            } catch (e: Exception) {
-                Result.failure(e)
-            }
+    private fun getSearchMoviesPager(keyword: String): Flow<PagingData<Movie>> {
+        // Use PagingSource for search results
+        return Pager(
+            config = PagingConfig(pageSize = 20)
+        ) {
+            SearchRemotePagingSource(keyword)
+        }.flow.map { pagingData ->
+            pagingData.map { dataMovie -> dataMovie.toDomainMovie() }
         }
     }
 
+    @OptIn(ExperimentalPagingApi::class)
+    private fun getDiscoverMoviesPager(): Flow<PagingData<Movie>> {
+        // Use RemoteMediator for regular movie list
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            remoteMediator = MoviesListRemoteMediator(database!!)
+        ) {
+            moviesDao!!.getAll()
+        }.flow.map { pagingData ->
+            pagingData.map { dataMovie -> dataMovie.toDomainMovie() }
+        }
+    }
+
+    suspend fun updateSearchQuery(query: String) {
+        _searchKeyword.emit(query)
+    }
 
 }

@@ -1,16 +1,17 @@
 package com.example.moviesapp.data.local.dataSources
 
+import androidx.paging.PagingSource
 import com.example.moviesapp.data.local.database.DatabaseManager
-import com.example.moviesapp.data.local.models.Movie
+import com.example.moviesapp.data.models.Movie
 
 class MoviesListLocalDataSource() {
     private val databaseManager by lazy {
         DatabaseManager()
     }
 
-    suspend fun discoverMovies(): List<Movie>? {
-        return databaseManager.getDatabase()?.movieDao()?.getAll()
-    }
+    /*   suspend fun discoverMovies(): List<Movie>? {
+           return databaseManager.getDatabase()?.movieDao()?.getAll()
+       }*/
 
     fun cacheMovies(movies: List<Movie>) {
         databaseManager.getDatabase()?.movieDao()?.insertAll(movies)
@@ -20,8 +21,8 @@ class MoviesListLocalDataSource() {
         databaseManager.getDatabase()?.movieDao()?.deleteAllMovies()
     }
 
-    fun searchMovies(keyword: String, pageNumber: Int): List<Movie>? {
-        return databaseManager.getDatabase()?.movieDao()?.findByTitle("%$keyword%")
+    fun searchMovies(keyword: String, pageNumber: Int): PagingSource<Int, Movie>? {
+        return databaseManager.getDatabase()?.movieDao()?.findByTitle(keyword)
     }
     /*  suspend fun searchMovies(
           keyword:String,
