@@ -4,24 +4,18 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import androidx.room.withTransaction
-import com.example.moviesapp.data.local.database.AppDatabase
+import com.example.moviesapp.data.local.dataSources.MoviesListLocalDataSource
 import com.example.moviesapp.data.models.Movie
-import com.example.moviesapp.data.remote.RetrofitClient
 import com.example.moviesapp.data.remote.services.MoviesListService
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class MoviesListRemoteMediator(
-    private val database: AppDatabase
+class MoviesListRemoteMediatorImpl @Inject constructor(
+    private val moviesListLocalDataSource: MoviesListLocalDataSource,
+    private val moviesListService: MoviesListService
 ) : RemoteMediator<Int, Movie>() {
-    private val moviesDao = database.movieDao()
-
-    private val moviesListService by lazy {
-        RetrofitClient.getRetrofitClient().create(MoviesListService::class.java)
-    }
-
     private var currentPage = 1
 
     override suspend fun load(
@@ -67,16 +61,10 @@ class MoviesListRemoteMediator(
 
             // Store loaded data, and next key in transaction, so that
             // they're always consistent.
-            database.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    moviesDao.deleteAllMovies()
-                }
-
-                // Insert new users into database, which invalidates the
-                // current PagingData, allowing Paging to present the updates
-                // in the DB.
-                moviesDao.insertAll(response.movies)
-            }
+            moviesListLocalDataSource.updateMoviesData(
+                loadType == LoadType.REFRESH,
+                response.movies
+            )
 
             // End of pagination has been reached if no users are returned from the service
             MediatorResult.Success(

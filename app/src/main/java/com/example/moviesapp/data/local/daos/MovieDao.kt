@@ -10,7 +10,7 @@ import com.example.moviesapp.data.models.Movie
 @Dao
 interface MovieDao {
     @Query("SELECT * FROM movie ORDER BY popularity DESC")
-    fun getAll(): PagingSource<Int, Movie>
+    fun discoverMovies(): PagingSource<Int, Movie>
 
     @Query("SELECT * FROM movie WHERE title LIKE '%' || :keyword || '%' ORDER BY popularity DESC")
     fun findByTitle(keyword: String): PagingSource<Int, Movie>

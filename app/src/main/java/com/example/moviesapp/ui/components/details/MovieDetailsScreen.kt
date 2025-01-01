@@ -10,8 +10,8 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviesapp.features.list.ui.components.ProgressBar
 import com.example.moviesapp.ui.actions.MovieDetailsUiActions
 import com.example.moviesapp.ui.components.ErrorPlaceholder
@@ -23,7 +23,7 @@ import com.example.moviesapp.ui.viewModels.MovieDetailsViewModel
 fun MovieDetailsScreen(
     modifier: Modifier = Modifier,
     movieId: Int? = null,
-    movieDetailsViewModel: MovieDetailsViewModel = viewModel()
+    movieDetailsViewModel: MovieDetailsViewModel = hiltViewModel()
 ) {
     movieId?.let { id ->
         movieDetailsViewModel.onAction(MovieDetailsUiActions.GetMovieDetails(id))
