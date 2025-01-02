@@ -8,8 +8,8 @@ import com.example.moviesapp.data.local.dataSources.MoviesListLocalDataSource
 import com.example.moviesapp.data.local.database.AppDatabase
 import com.example.moviesapp.data.models.Movie
 import com.example.moviesapp.data.remote.RetrofitClient
+import com.example.moviesapp.data.remote.dataSources.MovieDetailsDataSource
 import com.example.moviesapp.data.remote.dataSources.MovieDetailsRemoteDataSource
-import com.example.moviesapp.data.remote.dataSources.MovieDetailsRemoteDataSourceImpl
 import com.example.moviesapp.data.remote.mediators.MoviesListRemoteMediatorImpl
 import com.example.moviesapp.data.remote.services.MovieDetailsService
 import com.example.moviesapp.data.remote.services.MoviesListService
@@ -27,7 +27,7 @@ import javax.inject.Singleton
 abstract class ApplicationModule {
 
     @Binds
-    abstract fun bindMovieDetailsRemoteDataSource(dataSource: MovieDetailsRemoteDataSourceImpl): MovieDetailsRemoteDataSource
+    abstract fun bindMovieDetailsRemoteDataSource(dataSource: MovieDetailsRemoteDataSource): MovieDetailsDataSource
 
     @OptIn(ExperimentalPagingApi::class)
     @Binds

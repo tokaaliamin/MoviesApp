@@ -76,11 +76,14 @@ dependencies {
 
     // Kotlinx serialization
     implementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.kotlinx.serialization.json)
 
     // Retrofit
     implementation(libs.retrofit)
+    testImplementation(libs.retrofit)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation (libs.okhttp)
+    testImplementation(libs.okhttp)
     implementation (libs.logging.interceptor)
 
     // Coroutines
@@ -93,6 +96,7 @@ dependencies {
 
     // Room
     implementation(libs.androidx.room.runtime)
+    testImplementation(libs.junit.junit)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
