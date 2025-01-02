@@ -18,12 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.example.moviesapp.ui.models.Movie
 import com.example.moviesapp.ui.models.getMovieTemp
+import com.example.moviesapp.ui.theme.Dimens.Companion.dimens
 
 @Composable
 fun MoviesList(
@@ -33,10 +33,10 @@ fun MoviesList(
 ) {
     LazyVerticalGrid(
         modifier = modifier,
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        columns = GridCells.Fixed(MaterialTheme.dimens.moviesGridColumnsCount),
+        contentPadding = PaddingValues(MaterialTheme.dimens.paddingMedium),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.paddingMedium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.paddingMedium),
         state = rememberLazyGridState()
     ) {
         items(movies.itemCount,
@@ -55,13 +55,13 @@ fun MovieItem(movie: Movie, onMovieClicked: (Int?) -> Unit = {}, modifier: Modif
                 model = movie.posterUrl,
                 contentDescription = null,
                 modifier = Modifier
-                    .height(200.dp)
+                    .height(MaterialTheme.dimens.heightCard)
                     .fillMaxWidth(),
-                contentScale = ContentScale.FillWidth
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = movie.title ?: "",
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingSmall),
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -69,25 +69,14 @@ fun MovieItem(movie: Movie, onMovieClicked: (Int?) -> Unit = {}, modifier: Modif
             Text(
                 text = movie.releaseDate ?: "",
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 8.dp),
+                    .padding(horizontal = MaterialTheme.dimens.paddingSmall)
+                    .padding(bottom = MaterialTheme.dimens.paddingSmall),
                 style = MaterialTheme.typography.bodySmall
             )
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MoviesListPreview() {
-    /* MoviesList(
-         listOf(
-             getMovieTemp(),
-             getMovieTemp(),
-             getMovieTemp()
-         )
-     )*/
-}
 
 @Preview(showBackground = true)
 @Composable

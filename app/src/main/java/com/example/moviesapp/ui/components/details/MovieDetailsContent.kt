@@ -31,12 +31,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.models.Genre
 import com.example.moviesapp.ui.models.MovieDetails
 import com.example.moviesapp.ui.models.getMovieDetailsTemp
+import com.example.moviesapp.ui.theme.Dimens.Companion.dimens
 import com.example.moviesapp.ui.theme.Yellow
 
 @Composable
@@ -44,8 +44,8 @@ fun MovieDetailsContent(movie: MovieDetails?, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.verticalScroll(rememberScrollState())
     ) {
-        val backdropHeight = 200.dp
-        val imagesOverlay = 50.dp
+        val backdropHeight = MaterialTheme.dimens.heightBackdrop
+        val imagesOverlay = MaterialTheme.dimens.heightBackdropOverlay
         AsyncImage(
             model = movie?.backdropUrl,
             placeholder = painterResource(R.drawable.placeholder_preview_small),
@@ -69,7 +69,7 @@ fun MovieDetailsContent(movie: MovieDetails?, modifier: Modifier = Modifier) {
 fun MovieDetailsInfo(movie: MovieDetails?, imagesOverlay: Dp, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = MaterialTheme.dimens.paddingMedium)
     ) {
         Row {
             AsyncImage(
@@ -77,10 +77,10 @@ fun MovieDetailsInfo(movie: MovieDetails?, imagesOverlay: Dp, modifier: Modifier
                 contentDescription = null,
                 placeholder = painterResource(R.drawable.placeholder_preview_small),
                 modifier = Modifier
-                    .height(200.dp)
-                    .width(150.dp)
-                    .padding(end = 16.dp)
-                    .clip(RoundedCornerShape(16.dp)),
+                    .height(MaterialTheme.dimens.heightPoster)
+                    .width(MaterialTheme.dimens.widthPoster)
+                    .padding(end = MaterialTheme.dimens.paddingMedium)
+                    .clip(RoundedCornerShape(MaterialTheme.dimens.roundedCornerXLarge)),
                 contentScale = ContentScale.Crop,
             )
 
@@ -114,12 +114,12 @@ fun Rating(rating: Double?, modifier: Modifier = Modifier) {
             imageVector = Icons.Default.Star,
             contentDescription = null,
             tint = Yellow,
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier.size(MaterialTheme.dimens.sizeRatingStar)
         )
         Text(
             text = (rating ?: 0.0).toString(),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier.padding(MaterialTheme.dimens.paddingTiny)
         )
     }
 }
@@ -127,7 +127,10 @@ fun Rating(rating: Double?, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun GenreChipsList(genres: List<Genre>, modifier: Modifier = Modifier) {
-    FlowRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    FlowRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.paddingTiny)
+    ) {
         genres.forEach { genre ->
             GenreChipItem(genre.name ?: "")
         }
@@ -140,9 +143,15 @@ fun GenreChipItem(genre: String, modifier: Modifier = Modifier) {
         text = genre,
         style = MaterialTheme.typography.labelMedium,
         modifier = modifier
-            .padding(top = 4.dp)
-            .background(Color.LightGray, RoundedCornerShape(6.dp))
-            .padding(horizontal = 4.dp, vertical = 2.dp),
+            .padding(top = MaterialTheme.dimens.paddingTiny)
+            .background(
+                Color.LightGray,
+                RoundedCornerShape(MaterialTheme.dimens.roundedCornerMedium)
+            )
+            .padding(
+                horizontal = MaterialTheme.dimens.paddingTiny,
+                vertical = MaterialTheme.dimens.paddingMicro
+            ),
         color = Color.DarkGray
     )
 }
@@ -152,7 +161,7 @@ fun Description(description: String) {
     Text(
         text = stringResource(R.string.overview),
         style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.padding(top = 16.dp)
+        modifier = Modifier.padding(top = MaterialTheme.dimens.paddingMedium)
     )
 
     Text(

@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
@@ -33,6 +32,7 @@ import com.example.moviesapp.ui.actions.MoviesListUiActions
 import com.example.moviesapp.ui.components.ErrorPlaceholder
 import com.example.moviesapp.ui.components.NoDataPlaceholder
 import com.example.moviesapp.ui.components.list.MoviesList
+import com.example.moviesapp.ui.theme.Dimens.Companion.dimens
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.example.moviesapp.ui.viewModels.MoviesListViewModel
 import com.example.moviesapp.utils.ErrorParser.getLoadStateError
@@ -133,7 +133,7 @@ fun SearchBar(
         },
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp),
+            .heightIn(min = MaterialTheme.dimens.heightSearchBar),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.surface,
             unfocusedContainerColor = MaterialTheme.colorScheme.surface
