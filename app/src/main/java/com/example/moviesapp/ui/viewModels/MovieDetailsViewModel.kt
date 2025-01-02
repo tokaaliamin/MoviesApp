@@ -49,7 +49,7 @@ class MovieDetailsViewModel @Inject constructor(private val useCase: MovieDetail
                 result.getOrNull()?.toUiMovieDetails()
                     ?.apply {
                         _uiState.update {
-                            it.copy(movie = this)
+                            it.copy(movie = this, errorMessageWrapper = null)
                         }
                     }
             }
