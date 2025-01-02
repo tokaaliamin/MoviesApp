@@ -13,9 +13,6 @@ data class Movie(
     @PrimaryKey
     @SerialName("id")
     val id: Int? = null,
-    @ColumnInfo(name = "popularity")
-    @SerialName("popularity")
-    val popularity: Double? = null,
     @ColumnInfo(name = "poster_path")
     @SerialName("poster_path")
     val posterPath: String? = null,

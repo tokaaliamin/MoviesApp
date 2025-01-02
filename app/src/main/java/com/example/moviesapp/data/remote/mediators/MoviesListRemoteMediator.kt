@@ -30,13 +30,12 @@ class MoviesListRemoteMediatorImpl @Inject constructor(
             // first page.
             val loadKey = when (loadType) {
                 LoadType.REFRESH -> 1
-                // In this example, you never need to prepend, since REFRESH
+                // no need to prepend in this app, since REFRESH
                 // will always load the first page in the list. Immediately
                 // return, reporting end of pagination.
                 LoadType.PREPEND -> return MediatorResult.Success(
                     endOfPaginationReached = true
                 )
-                // Get the last User object id for the next RemoteKey.
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
                     // You must explicitly check if the last item is null when
@@ -49,24 +48,23 @@ class MoviesListRemoteMediatorImpl @Inject constructor(
                             endOfPaginationReached = true
                         )
                     }
-
+                    // Get the next RemoteKey.
                     currentPage + 1
                 }
             }
 
-
-            val response = moviesListService.discoverMovies(loadKey)
+            // Get movies from service
+            val response = moviesListService.fetchMoviesList(loadKey)
 
             currentPage = response.page ?: 1
 
-            // Store loaded data, and next key in transaction, so that
-            // they're always consistent.
+            // Store loaded data
             moviesListLocalDataSource.updateMoviesData(
                 loadType == LoadType.REFRESH,
                 response.movies
             )
 
-            // End of pagination has been reached if no users are returned from the service
+            // End of pagination has been reached if no movies are returned from the service
             MediatorResult.Success(
                 endOfPaginationReached = response.movies.isEmpty()
             )
