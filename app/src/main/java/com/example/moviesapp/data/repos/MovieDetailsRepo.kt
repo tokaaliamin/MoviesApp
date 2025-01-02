@@ -5,10 +5,9 @@ import com.example.moviesapp.data.remote.models.toDomainMovieDetails
 import com.example.moviesapp.domain.models.MovieDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MovieDetailsRepo() {
-    private val movieDataRemoteDataSource by lazy { MovieDetailsRemoteDataSource() }
-
+class MovieDetailsRepo @Inject constructor(private val movieDataRemoteDataSource: MovieDetailsRemoteDataSource) {
 
     suspend fun fetchMovieDetails(movieId: Int): Result<MovieDetails> {
         return withContext(Dispatchers.IO) {

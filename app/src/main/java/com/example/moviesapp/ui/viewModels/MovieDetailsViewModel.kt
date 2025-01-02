@@ -10,14 +10,18 @@ import com.example.moviesapp.domain.useCases.MovieDetailsUseCase
 import com.example.moviesapp.ui.actions.MovieDetailsUiActions
 import com.example.moviesapp.ui.models.StringWrapper
 import com.example.moviesapp.ui.states.MovieDetailsUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class MovieDetailsViewModel : ViewModel() {
+@HiltViewModel
+class MovieDetailsViewModel @Inject constructor(private val useCase: MovieDetailsUseCase) :
+    ViewModel() {
     private val _uiState = MutableStateFlow(MovieDetailsUiState())
     val uiState: StateFlow<MovieDetailsUiState> = _uiState
 
@@ -37,7 +41,7 @@ class MovieDetailsViewModel : ViewModel() {
 
     private fun getMovieDetails(movieId: Int) {
         viewModelScope.launch {
-            val result = MovieDetailsUseCase().invoke(movieId)
+            val result = useCase.invoke(movieId)
             _uiState.update { it.copy(isLoading = false, isRefreshing = false) }
             handleMoviesListResult(result)
         }

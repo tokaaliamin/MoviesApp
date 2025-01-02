@@ -2,7 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlinx.serialization)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    id("kotlin-kapt")
 }
 
 android {
@@ -101,6 +103,11 @@ dependencies {
     // Pagination
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
+
+    // Hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
 
     testImplementation(libs.junit)

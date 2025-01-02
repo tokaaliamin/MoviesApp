@@ -1,15 +1,18 @@
 package com.example.moviesapp.data.remote.dataSources
 
-import com.example.moviesapp.data.remote.RetrofitClient
 import com.example.moviesapp.data.remote.models.MovieDetails
 import com.example.moviesapp.data.remote.services.MovieDetailsService
+import javax.inject.Inject
 
-class MovieDetailsRemoteDataSource() {
-    private val movieDetailsService by lazy {
-        RetrofitClient.getRetrofitClient().create(MovieDetailsService::class.java)
-    }
+class MovieDetailsRemoteDataSourceImpl @Inject constructor(private val movieDetailsService: MovieDetailsService) :
+    MovieDetailsRemoteDataSource {
 
-    suspend fun fetchMovieDetails(movieId: Int): MovieDetails {
+
+    override suspend fun fetchMovieDetails(movieId: Int): MovieDetails {
         return movieDetailsService.fetchMovieDetails(movieId)
     }
+}
+
+interface MovieDetailsRemoteDataSource {
+    suspend fun fetchMovieDetails(movieId: Int): MovieDetails
 }

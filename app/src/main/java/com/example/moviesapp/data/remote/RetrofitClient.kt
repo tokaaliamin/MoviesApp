@@ -12,15 +12,16 @@ import java.util.concurrent.TimeUnit
 
 
 object RetrofitClient {
-    fun getRetrofitClient(): Retrofit {
-        val json = Json { ignoreUnknownKeys = true }
-        val contentType = "application/json".toMediaType()
-        return Retrofit.Builder()
+
+    val retrofitClient =
+        Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/3/")
-            .addConverterFactory(json.asConverterFactory(contentType))
+            .addConverterFactory(Json {
+                ignoreUnknownKeys = true
+            }.asConverterFactory("application/json".toMediaType()))
             .client(getOkHttpClient())
             .build()
-    }
+
 
     private fun getOkHttpClient() =
         OkHttpClient.Builder()

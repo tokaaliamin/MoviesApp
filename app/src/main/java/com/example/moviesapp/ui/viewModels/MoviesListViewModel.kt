@@ -10,16 +10,17 @@ import com.example.moviesapp.domain.useCases.MovieListUseCase
 import com.example.moviesapp.ui.actions.MoviesListUiActions
 import com.example.moviesapp.ui.models.Movie
 import com.example.moviesapp.ui.states.MoviesListUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MoviesListViewModel : ViewModel() {
-
-    private val useCase by lazy { MovieListUseCase() }
+@HiltViewModel
+class MoviesListViewModel @Inject constructor(private val useCase: MovieListUseCase) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MoviesListUiState())
     val uiState: StateFlow<MoviesListUiState> = _uiState
