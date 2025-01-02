@@ -20,9 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.models.StringWrapper
+import com.example.moviesapp.ui.theme.Dimens.Companion.dimens
 import com.example.moviesapp.utils.ErrorParser
 
 
@@ -41,13 +41,16 @@ fun ErrorPlaceholder(
     ) {
         Image(
             modifier = Modifier
-                .size(width = 300.dp, height = 200.dp),
+                .size(
+                    width = MaterialTheme.dimens.widthErrorPlaceholder,
+                    height = MaterialTheme.dimens.heightErrorPlaceholder
+                ),
             painter = painterResource(R.drawable.placeholder_error),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.heightSpacerMedium))
 
         val error = if (errorMessageWrapper.stringInt != null) {
             context.getString(errorMessageWrapper.stringInt)
@@ -58,10 +61,10 @@ fun ErrorPlaceholder(
             text = error ?: "",
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp)
+            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingLarge)
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.heightSpacerSmall))
 
         ElevatedButton(onClick = onAction) {
             Text(text = stringResource(R.string.reload))
@@ -87,11 +90,11 @@ fun NoDataPlaceholder(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            modifier = Modifier.size(200.dp),
+            modifier = Modifier.size(MaterialTheme.dimens.heightNoDataPlaceholder),
             painter = painterResource(R.drawable.placeholder_empty_list),
             contentDescription = null
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.heightSpacerLarge))
         Text(
             text = stringResource(R.string.no_movies_has_been_found),
             style = MaterialTheme.typography.titleMedium

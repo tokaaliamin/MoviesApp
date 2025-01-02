@@ -6,8 +6,6 @@ import javax.inject.Inject
 
 class MovieDetailsRemoteDataSource @Inject constructor(private val movieDetailsService: MovieDetailsService) :
     MovieDetailsDataSource {
-
-
     override suspend fun fetchMovieDetails(movieId: Int): MovieDetails {
         return movieDetailsService.fetchMovieDetails(movieId)
     }

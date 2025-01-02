@@ -3,22 +3,22 @@ package com.example.moviesapp.domain.useCases
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class PostersUseCaseTest {
+class ImagesUseCaseTest {
 
     @Test
     fun invokePosterUseCase_getPosterUrl_null() {
-        assertEquals("", PostersUseCase().invoke(null))
+        assertEquals("", ImagesUseCase().invoke(null))
     }
 
     @Test
     fun invokePosterUseCase_getPosterUrl_blank() {
-        assertEquals("", PostersUseCase().invoke(null))
+        assertEquals("", ImagesUseCase().invoke(null))
     }
 
     @Test
     fun invokePosterUseCase_getPosterUrl_valid() {
         val imageSuffix = "12345"
-        val result = PostersUseCase().invoke(imageSuffix)
+        val result = ImagesUseCase().invoke(imageSuffix)
         assertEquals("https://image.tmdb.org/t/p/w500/$imageSuffix", result)
     }
 }

@@ -8,8 +8,8 @@ import javax.inject.Inject
 
 class MoviesListLocalDataSource @Inject constructor(private val database: AppDatabase) {
 
-    fun discoverMovies(): PagingSource<Int, Movie> {
-        return database.movieDao().discoverMovies()
+    fun fetchMoviesList(): PagingSource<Int, Movie> {
+        return database.movieDao().fetchMoviesList()
     }
 
     fun cacheMovies(movies: List<Movie>) {
@@ -20,9 +20,6 @@ class MoviesListLocalDataSource @Inject constructor(private val database: AppDat
         database.movieDao().deleteAllMovies()
     }
 
-    fun searchMovies(keyword: String, pageNumber: Int): PagingSource<Int, Movie>? {
-        return database.movieDao().findByTitle(keyword)
-    }
 
     suspend fun updateMoviesData(isRefresh: Boolean, movies: List<Movie>) {
         database.withTransaction {
@@ -36,11 +33,5 @@ class MoviesListLocalDataSource @Inject constructor(private val database: AppDat
             cacheMovies(movies)
         }
     }
-    /*  suspend fun searchMovies(
-          keyword:String,
-          pageNumber: Int
-      ): MoviesListResponse {
-          return moviesListService.searchMovies(keyword,pageNumber)
-      }*/
 
 }

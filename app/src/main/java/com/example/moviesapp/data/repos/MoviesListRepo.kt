@@ -28,10 +28,10 @@ class MoviesListRepo @OptIn(ExperimentalPagingApi::class)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getMovies(): Flow<PagingData<Movie>> {
+        //switch pager between listing all movies or search in movies upon keyword updates
         return _searchKeyword.flatMapLatest { keyword ->
-            println(keyword)
             if (keyword.isBlank()) {
-                getDiscoverMoviesPager()
+                getMoviesPager()
             } else {
                 getSearchMoviesPager(keyword)
             }
@@ -50,13 +50,13 @@ class MoviesListRepo @OptIn(ExperimentalPagingApi::class)
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    private fun getDiscoverMoviesPager(): Flow<PagingData<Movie>> {
+    private fun getMoviesPager(): Flow<PagingData<Movie>> {
         // Use RemoteMediator for regular movie list
         return Pager(
             config = PagingConfig(pageSize = 20),
             remoteMediator = moviesListRemoteMediator
         ) {
-            moviesListLocalDataSource.discoverMovies()
+            moviesListLocalDataSource.fetchMoviesList()
         }.flow.map { pagingData ->
             pagingData.map { dataMovie -> dataMovie.toDomainMovie() }
         }

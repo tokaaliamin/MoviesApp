@@ -1,7 +1,7 @@
 package com.example.moviesapp.domain.models
 
 
-import com.example.moviesapp.domain.useCases.PostersUseCase
+import com.example.moviesapp.domain.useCases.ImagesUseCase
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,8 +18,8 @@ data class MovieDetails(
 fun MovieDetails.toUiMovieDetails() = com.example.moviesapp.ui.models.MovieDetails(
     id,
     title,
-    PostersUseCase().invoke(posterPathSuffix),
-    PostersUseCase().invoke(backdropPathSuffix),
+    ImagesUseCase().invoke(posterPathSuffix, ImageSize.POSTER),
+    ImagesUseCase().invoke(backdropPathSuffix, ImageSize.BACKDROP),
     rating,
     genres?.map { it.toUiGenre() },
     overview
