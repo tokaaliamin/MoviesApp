@@ -25,7 +25,9 @@ object RetrofitClient {
 
     private fun getOkHttpClient() =
         OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(getInterceptor())
             .addInterceptor(getLoggingInterceptor())
             .build()

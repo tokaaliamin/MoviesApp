@@ -31,7 +31,7 @@ class SearchRemotePagingSource @Inject constructor(
             return LoadResult.Page(
                 data = response.movies,
                 prevKey = null, // Only paging forward.
-                nextKey = response.page?.plus(1)
+                nextKey = if (response.movies.isEmpty()) null else response.page?.plus(1)
             )
         } catch (e: IOException) {
             return LoadResult.Error(e)
