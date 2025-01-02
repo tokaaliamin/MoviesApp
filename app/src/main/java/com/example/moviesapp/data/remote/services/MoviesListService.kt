@@ -5,12 +5,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface MoviesListService {
-    @GET("discover/movie")
+    @GET("movie/top_rated")
     suspend fun discoverMovies(
         @Query("page") pageNumber: Int,
-        @Query("sort_by") sortBy: String = "popularity.desc",
-        @Query("language") language: String = "en-US",
-        @Query("include_adult") includeAdult: Boolean = false
+        @Query("language") language: String = "en-US"
     ): MoviesListResponse
 
     @GET("search/movie")
