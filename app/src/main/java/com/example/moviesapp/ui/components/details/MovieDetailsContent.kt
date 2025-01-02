@@ -47,7 +47,7 @@ fun MovieDetailsContent(movie: MovieDetails?, modifier: Modifier = Modifier) {
         val backdropHeight = 200.dp
         val imagesOverlay = 50.dp
         AsyncImage(
-            model = movie?.backdropPath,
+            model = movie?.backdropUrl,
             placeholder = painterResource(R.drawable.placeholder_preview_small),
             contentDescription = null,
             modifier = Modifier
