@@ -2,7 +2,7 @@ package com.example.moviesapp.domain.models
 
 
 import androidx.room.Entity
-import com.example.moviesapp.domain.useCases.PostersUseCase
+import com.example.moviesapp.domain.useCases.ImagesUseCase
 
 @Entity
 data class Movie(
@@ -16,7 +16,7 @@ fun Movie.toUiMovie(): com.example.moviesapp.ui.models.Movie {
     return com.example.moviesapp.ui.models.Movie(
         id,
         title,
-        PostersUseCase().invoke(posterSuffix),
+        ImagesUseCase().invoke(posterSuffix, ImageSize.POSTER),
         releaseDate
     )
 }
