@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.RemoteMediator
 import androidx.room.Room
-import com.example.moviesapp.data.MoviesListRemoteMediatorImpl
 import com.example.moviesapp.data.local.dataSources.MoviesListLocalDataSource
 import com.example.moviesapp.data.local.database.AppDatabase
 import com.example.moviesapp.data.models.Movie
 import com.example.moviesapp.data.remote.RetrofitClient
 import com.example.moviesapp.data.remote.dataSources.MovieDetailsRemoteDataSource
 import com.example.moviesapp.data.remote.dataSources.MovieDetailsRemoteDataSourceImpl
+import com.example.moviesapp.data.remote.mediators.MoviesListRemoteMediatorImpl
 import com.example.moviesapp.data.remote.services.MovieDetailsService
 import com.example.moviesapp.data.remote.services.MoviesListService
 import dagger.Binds
