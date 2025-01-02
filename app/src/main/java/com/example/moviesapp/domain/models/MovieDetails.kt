@@ -6,20 +6,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MovieDetails(
-    val backdropPath: String? = null,
+    val backdropPathSuffix: String? = null,
     val genres: List<Genre>? = null,
     val id: Int? = null,
     val title: String? = null,
     val overview: String? = null,
-    val posterPath: String? = null,
+    val posterPathSuffix: String? = null,
     val rating: Double? = null
 )
 
 fun MovieDetails.toUiMovieDetails() = com.example.moviesapp.ui.models.MovieDetails(
     id,
     title,
-    PostersUseCase().invoke(posterPath),
-    PostersUseCase().invoke(backdropPath),
+    PostersUseCase().invoke(posterPathSuffix),
+    PostersUseCase().invoke(backdropPathSuffix),
     rating,
     genres?.map { it.toUiGenre() },
     overview
