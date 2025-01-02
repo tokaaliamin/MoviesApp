@@ -23,6 +23,7 @@ lifecycleViewmodelKtx = "2.8.7"
 roomRuntime = "2.6.1"
 ksp = "1.9.0-1.0.13"
 hilt = "2.51.1"
+junitJunit = "4.12"
 
 
 [libraries]
@@ -61,6 +62,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 
 
 [plugins]

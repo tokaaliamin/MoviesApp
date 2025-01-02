@@ -4,8 +4,8 @@ import com.example.moviesapp.data.remote.models.MovieDetails
 import com.example.moviesapp.data.remote.services.MovieDetailsService
 import javax.inject.Inject
 
-class MovieDetailsRemoteDataSourceImpl @Inject constructor(private val movieDetailsService: MovieDetailsService) :
-    MovieDetailsRemoteDataSource {
+class MovieDetailsRemoteDataSource @Inject constructor(private val movieDetailsService: MovieDetailsService) :
+    MovieDetailsDataSource {
 
 
     override suspend fun fetchMovieDetails(movieId: Int): MovieDetails {
@@ -13,6 +13,6 @@ class MovieDetailsRemoteDataSourceImpl @Inject constructor(private val movieDeta
     }
 }
 
-interface MovieDetailsRemoteDataSource {
+interface MovieDetailsDataSource {
     suspend fun fetchMovieDetails(movieId: Int): MovieDetails
 }
