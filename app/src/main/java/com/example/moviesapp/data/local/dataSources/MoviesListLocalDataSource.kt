@@ -2,13 +2,11 @@ package com.example.moviesapp.data.local.dataSources
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
-import com.example.moviesapp.data.local.database.DatabaseManager
+import com.example.moviesapp.data.local.database.AppDatabase
 import com.example.moviesapp.data.models.Movie
+import javax.inject.Inject
 
-class MoviesListLocalDataSource() {
-    private val database by lazy {
-        DatabaseManager().getDatabase()
-    }
+class MoviesListLocalDataSource @Inject constructor(private val database: AppDatabase) {
 
     fun discoverMovies(): PagingSource<Int, Movie> {
         return database.movieDao().discoverMovies()
@@ -29,13 +27,13 @@ class MoviesListLocalDataSource() {
     suspend fun updateMoviesData(isRefresh: Boolean, movies: List<Movie>) {
         database.withTransaction {
             if (isRefresh) {
-                database.movieDao().deleteAllMovies()
+                clearMovies()
             }
 
             // Insert new users into database, which invalidates the
             // current PagingData, allowing Paging to present the updates
             // in the DB.
-            database.movieDao().insertAll(movies)
+            cacheMovies(movies)
         }
     }
     /*  suspend fun searchMovies(
