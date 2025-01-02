@@ -2,21 +2,17 @@ package com.example.moviesapp.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviesapp.R
-import com.example.moviesapp.data.remote.models.ErrorResponse
 import com.example.moviesapp.domain.models.MovieDetails
 import com.example.moviesapp.domain.models.toUiMovieDetails
 import com.example.moviesapp.domain.useCases.MovieDetailsUseCase
 import com.example.moviesapp.ui.actions.MovieDetailsUiActions
-import com.example.moviesapp.ui.models.StringWrapper
 import com.example.moviesapp.ui.states.MovieDetailsUiState
+import com.example.moviesapp.utils.ErrorParser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,29 +55,12 @@ class MovieDetailsViewModel @Inject constructor(private val useCase: MovieDetail
             }
 
             result.isFailure -> {
-                val errorMessageWrapper = when (val throwable = result.exceptionOrNull()) {
-                    is HttpException -> {
-                        // Get error body as a string
-                        val errorBody = throwable.response()?.errorBody()?.string()
-                        if (!errorBody.isNullOrEmpty()) {
-                            try {
-                                val errorResponse =
-                                    Json.decodeFromString<ErrorResponse>(errorBody)
-                                StringWrapper(message = errorResponse.statusMessage)
-                            } catch (e: Exception) {
-                                StringWrapper(stringInt = R.string.failed_to_parse_error_response)
-                            }
-                        } else {
-                            StringWrapper(stringInt = R.string.failed_to_parse_error_response)
-                        }
+                result.exceptionOrNull()?.let { throwable ->
+                    _uiState.update {
+                        it.copy(errorMessageWrapper = ErrorParser.parseThrowable(throwable))
                     }
+                }
 
-                    else ->
-                        StringWrapper(stringInt = R.string.failed_to_parse_error_response)
-                }
-                _uiState.update {
-                    it.copy(errorMessageWrapper = errorMessageWrapper)
-                }
             }
         }
 
