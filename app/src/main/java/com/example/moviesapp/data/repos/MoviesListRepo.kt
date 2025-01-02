@@ -6,9 +6,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
 import androidx.paging.map
-import com.example.moviesapp.data.SearchRemotePagingSource
 import com.example.moviesapp.data.local.dataSources.MoviesListLocalDataSource
 import com.example.moviesapp.data.models.toDomainMovie
+import com.example.moviesapp.data.remote.dataSources.SearchRemotePagingSource
 import com.example.moviesapp.domain.models.Movie
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
