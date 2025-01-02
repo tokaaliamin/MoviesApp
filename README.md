@@ -1,5 +1,1 @@
-* Decisions:
-- packages architectures choice
-- State holders not needed
-- How to implement MVI in android
-- Placement of API KEY
+Movies App documentation: https://docs.google.com/document/d/1BSe5labQ67dLp8FbwdPU-IKYLzKJxlFc6BmQFzxUwtA/edit?usp=sharing
